@@ -1,0 +1,35 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { photos } from '../data/photos';
+
+// Pre-generate an optimized large version of each image for the lightbox.
+// Placeholder source images are only 800px wide, so we cap the full-size
+// width at 800 (1600 would exceed the source and error). When real, larger
+// source images are dropped in, bump this back up to 1600.
+const fullImages = await Promise.all(
+  photos.map((p) => getImage({ src: p.image, widths: [800], format: 'webp' }))
+);
+---
+<div class="columns-2 md:columns-3 gap-3 px-3 [&>*]:mb-3">
+  {photos.map((photo, i) => (
+    <button
+      type="button"
+      data-lightbox-item
+      data-index={i}
+      data-full={fullImages[i].src}
+      data-alt={photo.alt}
+      data-caption={photo.caption ?? ''}
+      class="block w-full break-inside-avoid cursor-zoom-in"
+      aria-label={`Open image: ${photo.alt}`}
+    >
+      <Image
+        src={photo.image}
+        alt={photo.alt}
+        widths={[300, 500, 800]}
+        sizes="(max-width: 768px) 50vw, 33vw"
+        class="w-full h-auto"
+        loading="lazy"
+      />
+    </button>
+  ))}
+</div>
