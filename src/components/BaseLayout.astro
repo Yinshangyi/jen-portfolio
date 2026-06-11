@@ -1,0 +1,45 @@
+---
+import '../styles/global.css';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const { title = site.name, description = site.seoDescription } = Astro.props;
+const nav = [
+  { label: 'Home', href: '/' },
+  { label: 'Portfolio', href: '/portfolio' },
+  { label: 'Contact', href: '/contact' },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <header class="flex items-center gap-6 px-6 py-5 text-xs uppercase tracking-[0.2em]">
+      <a href="/" class="mr-auto font-semibold tracking-[0.3em] text-base normal-case">{site.name}</a>
+      {nav.map((item) => (
+        <a href={item.href} class="text-neutral-600 hover:text-black transition-colors">{item.label}</a>
+      ))}
+    </header>
+
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <footer class="px-6 py-8 flex gap-5 text-xs uppercase tracking-[0.2em] text-neutral-500">
+      {site.socials.map((s) => (
+        <a href={s.href} class="hover:text-black transition-colors" target="_blank" rel="noopener">{s.label}</a>
+      ))}
+    </footer>
+  </body>
+</html>
