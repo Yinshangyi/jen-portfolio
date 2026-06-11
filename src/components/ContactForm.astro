@@ -1,0 +1,86 @@
+---
+// Netlify detects the form at build time via the `data-netlify` attribute and
+// the hidden `form-name` field. The script submits via fetch so we can show an
+// inline success state without a full page navigation. `netlify-honeypot` traps bots.
+---
+<form
+  name="contact"
+  method="POST"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+  class="max-w-md flex flex-col gap-4"
+  id="contact-form"
+>
+  <input type="hidden" name="form-name" value="contact" />
+  <p class="hidden">
+    <label>Don’t fill this out: <input name="bot-field" /></label>
+  </p>
+
+  <label class="flex flex-col gap-1 text-xs uppercase tracking-[0.2em] text-neutral-500">
+    Name
+    <input name="name" type="text" required class="border-b border-neutral-300 bg-transparent py-2 text-sm text-black focus:outline-none focus:border-black" />
+    <span data-error="name" class="text-red-600 normal-case tracking-normal"></span>
+  </label>
+
+  <label class="flex flex-col gap-1 text-xs uppercase tracking-[0.2em] text-neutral-500">
+    Email
+    <input name="email" type="email" required class="border-b border-neutral-300 bg-transparent py-2 text-sm text-black focus:outline-none focus:border-black" />
+    <span data-error="email" class="text-red-600 normal-case tracking-normal"></span>
+  </label>
+
+  <label class="flex flex-col gap-1 text-xs uppercase tracking-[0.2em] text-neutral-500">
+    Message
+    <textarea name="message" rows="5" required class="border border-neutral-300 bg-transparent py-2 px-2 text-sm text-black focus:outline-none focus:border-black"></textarea>
+    <span data-error="message" class="text-red-600 normal-case tracking-normal"></span>
+  </label>
+
+  <button type="submit" class="self-start mt-2 px-6 py-3 text-xs uppercase tracking-[0.25em] border border-black hover:bg-black hover:text-white transition-colors">
+    Send
+  </button>
+
+  <p data-success class="hidden text-sm text-green-700">Thank you — your message has been sent.</p>
+</form>
+
+<script>
+  import { validateContact } from '../lib/validateContact';
+
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const successEl = form.querySelector('[data-success]') as HTMLElement;
+
+  function setError(field: string, msg: string) {
+    const el = form.querySelector(`[data-error="${field}"]`) as HTMLElement | null;
+    if (el) el.textContent = msg;
+  }
+  function clearErrors() {
+    form.querySelectorAll('[data-error]').forEach((el) => (el.textContent = ''));
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearErrors();
+    const data = new FormData(form);
+    const input = {
+      name: String(data.get('name') ?? ''),
+      email: String(data.get('email') ?? ''),
+      message: String(data.get('message') ?? ''),
+    };
+
+    const { valid, errors } = validateContact(input);
+    if (!valid) {
+      for (const [field, msg] of Object.entries(errors)) setError(field, msg);
+      return;
+    }
+
+    try {
+      await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(data as any).toString(),
+      });
+      form.reset();
+      successEl.classList.remove('hidden');
+    } catch {
+      setError('message', 'Something went wrong. Please email directly.');
+    }
+  });
+</script>
