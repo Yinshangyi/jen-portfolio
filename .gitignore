@@ -25,3 +25,4 @@ pnpm-debug.log*
 
 # project-specific
 .superpowers/
+originals/

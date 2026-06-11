@@ -1,7 +1,5 @@
 import type { ImageMetadata } from 'astro';
-import shot01 from '../assets/portfolio/shot-01.jpg';
-import shot02 from '../assets/portfolio/shot-02.jpg';
-import shot03 from '../assets/portfolio/shot-03.jpg';
+import { site } from './site';
 
 export interface Photo {
   /** Imported image asset — Astro optimizes it at build time. */
@@ -12,10 +10,28 @@ export interface Photo {
   caption?: string;
 }
 
-// Display order is array order. To add a photo: drop the file in
-// src/assets/portfolio/, import it, and add an entry here.
-export const photos: Photo[] = [
-  { image: shot01, alt: 'Portrait — placeholder 1' },
-  { image: shot02, alt: 'Portrait — placeholder 2' },
-  { image: shot03, alt: 'Portrait — placeholder 3' },
-];
+// All images in src/assets/portfolio/ are picked up automatically — to add a
+// photo, just drop the file in that folder. Display order is by filename, so
+// prefix names (e.g. 01-, 02-) if you want to control the order.
+const modules = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/portfolio/*.{jpg,jpeg,png,webp,avif}',
+  { eager: true }
+);
+
+// Optional per-file overrides for nicer alt text / captions. Key by filename.
+// Anything not listed falls back to a generic, descriptive alt.
+const overrides: Record<string, { alt?: string; caption?: string }> = {
+  // 'DSCF6753.jpg': { alt: 'Jenny in a black blazer, Paris street', caption: '' },
+};
+
+export const photos: Photo[] = Object.entries(modules)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([path, mod]) => {
+    const file = path.split('/').pop() ?? '';
+    const override = overrides[file] ?? {};
+    return {
+      image: mod.default,
+      alt: override.alt ?? `${site.name} — portfolio photograph`,
+      caption: override.caption,
+    };
+  });
