@@ -14,14 +14,16 @@ export interface SiteConfig {
 
 // Placeholder content — replace with the model's real name, intro, and links.
 export const site: SiteConfig = {
-  name: 'Sophie Martin',
+  name: 'Jenny De Jaeger',
   tagline: 'Model',
   intro:
-    'Amateur model based in France. Available for editorial, portrait, and lifestyle shoots.',
-  email: 'hello@example.com',
+    'Project manager in tech and dancer, modeling for the love of it. Based in France and available for editorial, portrait, and lifestyle shoots.',
+  email: 'jenazareno21@gmail.com',
   socials: [
-    { label: 'Instagram', href: 'https://instagram.com/' },
-    { label: 'Email', href: 'mailto:hello@example.com' },
+    { label: 'Instagram', href: 'https://www.instagram.com/iam.jennydejaeger/' },
+    { label: 'Tiktok', href: 'https://www.tiktok.com/@jennydj2191/' },
+    { label: 'Email', href: 'mailto:jenazareno21@gmail.com' },
   ],
-  seoDescription: 'Portfolio of Sophie Martin, model — editorial and portrait photography.',
+  seoDescription:
+    'Portfolio of Jenny De Jaeger — model, project manager in tech, and dancer. Editorial and portrait photography.',
 };
