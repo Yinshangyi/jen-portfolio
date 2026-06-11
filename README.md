@@ -1,43 +1,27 @@
-# Astro Starter Kit: Minimal
+# Portfolio
 
-```sh
-npm create astro@latest -- --template minimal
+A minimalist static portfolio site — Home, Portfolio (masonry gallery + lightbox), and Contact.
+
+Built with [Astro](https://astro.build) + [Tailwind CSS v4](https://tailwindcss.com), deployed to [Netlify](https://www.netlify.com) (with Netlify Forms for the contact form).
+
+## Develop
+
+```bash
+npm install
+npm run dev      # local dev server
+npm test         # run the Vitest suite
+npm run build    # production build into dist/
+npm run preview  # preview the built site
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Editing content
 
-## 🚀 Project Structure
+- **Photos:** drop image files into `src/assets/portfolio/`, then import them and add an entry in `src/data/photos.ts`. Display order is array order; every photo needs `alt` text. To change the gallery layout, edit only `src/components/Gallery.astro`.
+- **Site text / links:** name, intro, contact email, and social links live in `src/data/site.ts`.
+- **Hero image:** replace `src/assets/hero.jpg`.
 
-Inside of your Astro project, you'll see the following folders and files:
+> The committed name, photos, and links are placeholders — replace them with the real content before launch. Page `<title>`s in `src/pages/*.astro` also reference the placeholder name.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+## Deploy
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Connect the repo to Netlify (build config is in `netlify.toml`: `npm run build` → `dist/`). The contact form works once deployed — submissions appear in the Netlify Forms dashboard. Attach a custom domain in Netlify.
