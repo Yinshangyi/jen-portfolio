@@ -1,0 +1,61 @@
+---
+// Renders a hidden overlay. The inline module script wires gallery buttons
+// (rendered by Gallery.astro) to open/close/navigate the overlay.
+---
+<div
+  id="lightbox"
+  class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Image viewer"
+>
+  <button id="lb-close" class="absolute top-4 right-5 text-white text-3xl leading-none" aria-label="Close">&times;</button>
+  <button id="lb-prev" class="absolute left-4 text-white text-4xl leading-none px-3 py-2" aria-label="Previous">&#8249;</button>
+  <img id="lb-img" class="max-h-[90vh] max-w-[90vw] object-contain" alt="" />
+  <button id="lb-next" class="absolute right-4 text-white text-4xl leading-none px-3 py-2" aria-label="Next">&#8250;</button>
+</div>
+
+<script>
+  import { nextIndex, prevIndex } from '../lib/lightbox';
+
+  const overlay = document.getElementById('lightbox')!;
+  const imgEl = document.getElementById('lb-img') as HTMLImageElement;
+  const items = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('[data-lightbox-item]')
+  );
+  const count = items.length;
+  let current = 0;
+
+  function show(index: number) {
+    current = index;
+    const el = items[index];
+    imgEl.src = el.dataset.full ?? '';
+    imgEl.alt = el.dataset.alt ?? '';
+  }
+
+  function open(index: number) {
+    show(index);
+    overlay.classList.remove('hidden');
+    overlay.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close() {
+    overlay.classList.add('hidden');
+    overlay.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+
+  items.forEach((el, i) => el.addEventListener('click', () => open(i)));
+  document.getElementById('lb-close')!.addEventListener('click', close);
+  document.getElementById('lb-next')!.addEventListener('click', () => show(nextIndex(current, count)));
+  document.getElementById('lb-prev')!.addEventListener('click', () => show(prevIndex(current, count)));
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+
+  document.addEventListener('keydown', (e) => {
+    if (overlay.classList.contains('hidden')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowRight') show(nextIndex(current, count));
+    if (e.key === 'ArrowLeft') show(prevIndex(current, count));
+  });
+</script>
