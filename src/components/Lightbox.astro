@@ -25,6 +25,7 @@
   );
   const count = items.length;
   let current = 0;
+  let lastFocused: HTMLElement | null = null;
 
   function show(index: number) {
     current = index;
@@ -34,16 +35,19 @@
   }
 
   function open(index: number) {
+    lastFocused = document.activeElement as HTMLElement | null;
     show(index);
     overlay.classList.remove('hidden');
     overlay.classList.add('flex');
     document.body.style.overflow = 'hidden';
+    (document.getElementById('lb-close') as HTMLButtonElement).focus();
   }
 
   function close() {
     overlay.classList.add('hidden');
     overlay.classList.remove('flex');
     document.body.style.overflow = '';
+    lastFocused?.focus();
   }
 
   items.forEach((el, i) => el.addEventListener('click', () => open(i)));
