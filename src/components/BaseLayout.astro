@@ -5,8 +5,19 @@ import { site } from '../data/site';
 interface Props {
   title?: string;
   description?: string;
+  /** When false, hides the site header and footer (e.g. the home page, which
+   *  carries its own nav and social links inside the hero). Defaults to true. */
+  chrome?: boolean;
+  /** When true, locks the page to exactly the viewport height with no scroll
+   *  (used by the home page so everything fits on one screen). Defaults to false. */
+  fullscreen?: boolean;
 }
-const { title = site.name, description = site.seoDescription } = Astro.props;
+const {
+  title = site.name,
+  description = site.seoDescription,
+  chrome = true,
+  fullscreen = false,
+} = Astro.props;
 const nav = [
   { label: 'Home', href: '/' },
   { label: 'Portfolio', href: '/portfolio' },
@@ -18,6 +29,9 @@ const nav = [
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <title>{title}</title>
@@ -26,30 +40,34 @@ const nav = [
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
   </head>
-  <body class="min-h-screen flex flex-col">
-    <header class="flex items-center gap-6 px-6 py-5 text-xs uppercase tracking-[0.2em]">
-      <a href="/" class="mr-auto font-semibold tracking-[0.3em] text-base normal-case">{site.name}</a>
-      {nav.map((item) => (
-        <a href={item.href} class="text-neutral-600 hover:text-black transition-colors">{item.label}</a>
-      ))}
-    </header>
+  <body class:list={["flex flex-col", fullscreen ? "h-dvh overflow-hidden" : "min-h-screen"]}>
+    {chrome && (
+      <header class="flex items-center gap-6 px-6 py-5 text-xs uppercase tracking-[0.2em]">
+        <a href="/" class="mr-auto font-semibold tracking-[0.3em] text-base normal-case">{site.name}</a>
+        {nav.map((item) => (
+          <a href={item.href} class="text-neutral-600 hover:text-black transition-colors">{item.label}</a>
+        ))}
+      </header>
+    )}
 
     <main class="flex-1">
       <slot />
     </main>
 
-    <footer class="px-6 py-8 flex gap-5 text-xs uppercase tracking-[0.2em] text-neutral-500">
-      {site.socials.map((s) => {
-        const external = s.href.startsWith('http');
-        return (
-          <a
-            href={s.href}
-            class="hover:text-black transition-colors"
-            target={external ? '_blank' : undefined}
-            rel={external ? 'noopener' : undefined}
-          >{s.label}</a>
-        );
-      })}
-    </footer>
+    {chrome && (
+      <footer class="px-6 py-8 flex gap-5 text-xs uppercase tracking-[0.2em] text-neutral-500">
+        {site.socials.map((s) => {
+          const external = s.href.startsWith('http');
+          return (
+            <a
+              href={s.href}
+              class="hover:text-black transition-colors"
+              target={external ? '_blank' : undefined}
+              rel={external ? 'noopener' : undefined}
+            >{s.label}</a>
+          );
+        })}
+      </footer>
+    )}
   </body>
 </html>
