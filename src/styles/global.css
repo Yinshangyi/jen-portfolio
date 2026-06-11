@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #888888;
+  --accent: #f4f1ec;
+}
+
+html {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+body { margin: 0; }
