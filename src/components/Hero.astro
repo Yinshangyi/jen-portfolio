@@ -24,10 +24,16 @@ const icons: Record<string, string> = {
     '<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.5 3c.3 2.1 1.5 3.4 3.5 3.6v2.4c-1.2.1-2.4-.2-3.5-.8v5.6c0 3.4-2.5 5.7-5.6 5.7A5.4 5.4 0 0 1 5.5 14c0-3.1 2.7-5.4 5.9-5v2.5c-.3-.1-.7-.1-1-.1-1.5 0-2.6 1.2-2.5 2.7 0 1.4 1.2 2.5 2.6 2.5 1.5 0 2.6-1.1 2.6-2.7V3h2.9Z"/></svg>',
 };
 const iconFor = (label: string) => icons[label.trim().toLowerCase()] ?? null;
+
+// Split the name so it breaks as "Jenny" / "De Jaeger" on narrow widths.
+const [firstName, ...nameRest] = site.name.split(' ');
+const lastName = nameRest.join(' ');
 ---
 <section class="grid h-dvh overflow-hidden grid-rows-[minmax(0,1fr)_auto] md:grid-rows-1 md:grid-cols-2">
   <div class="order-2 md:order-1 min-h-0 flex flex-col items-center justify-between gap-6 text-center px-8 py-8 md:py-12">
-    <h1 class="text-sm md:text-base font-semibold uppercase tracking-[0.35em]">{site.name}</h1>
+    <h1 class="text-sm md:text-base font-semibold uppercase tracking-[0.35em] leading-tight">
+      <span class="whitespace-nowrap">{firstName}</span> <span class="whitespace-nowrap">{lastName}</span>
+    </h1>
 
     <div class="max-w-md">
       <p class="text-base md:text-lg leading-relaxed text-neutral-700">{site.intro}</p>
