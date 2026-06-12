@@ -17,7 +17,7 @@ export const site: SiteConfig = {
   name: 'Jenny De Jaeger',
   tagline: 'Model',
   intro:
-    'Project manager in tech and dancer, modeling for the love of it. Based in France and available for editorial, portrait, and lifestyle shoots.',
+    'Project manager in tech and dancer, modeling for the love of it. Based in Paris and available for photoshoots.',
   email: 'jenazareno21@gmail.com',
   socials: [
     { label: 'Instagram', href: 'https://www.instagram.com/iam.jennydejaeger/' },
